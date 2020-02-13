@@ -5,3 +5,11 @@ CREATE TABLE IF NOT EXISTS notes(
     updated_at DATE ,
     deleted_at DATE 
 );
+
+CREATE TABLE IF NOT EXISTS users(
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL
+);
+
+I

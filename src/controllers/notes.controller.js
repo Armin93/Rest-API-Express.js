@@ -6,6 +6,7 @@ export async function getAllNotes(req, res) {
         data: notes
     })
 }
+
 export async function getOneNote(req, res) {
     const { id } = req.params;
     const note = await Notes.findOne({
@@ -17,6 +18,7 @@ export async function getOneNote(req, res) {
         data: note
     })
 }
+
 export async function createNotes(req, res) {
     const note = req.body.note;
     try {
@@ -42,6 +44,7 @@ export async function createNotes(req, res) {
     }
 
 }
+
 export async function deleteNote(req, res) {
     const { id } = req.params;
     const deleteNote = await Notes.destroy({
@@ -68,10 +71,10 @@ export async function updateNote(req, res) {
     if (updateNotes.length > 0) {
         updateNotes.forEach(async notes => {
             await notes.update({
-            id: "123e4567-e89b-12d3-a456-426655440002",
-            note: note,
-            updated_at: new Date()
-             
+                id: "123e4567-e89b-12d3-a456-426655440002",
+                note: note,
+                updated_at: new Date()
+
             })
         })
     } {
