@@ -9,11 +9,11 @@ router.post('/create', createNotes);
 //api/getAllNotes
 router.get('/', getAllNotes);
 //api/getOneNote/:notesId
-router.get('/:id', getOneNote);
+router.get('/:note_uid', getOneNote);
 //api/deleteNote
-router.delete('/:id', deleteNote);
+router.delete('/:note_uid', deleteNote);
 //api/updateNote
-router.put('/:id', updateNote);
+router.put('/:note_uid', updateNote);
 
 
 export default router;

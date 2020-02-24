@@ -1,5 +1,5 @@
 import Notes from '../models/Notes';
-
+import uuidv4 from 'uuid/v4'
 export async function getAllNotes(req, res) {
     const notes = await Notes.findAll();
     res.json({
@@ -8,10 +8,10 @@ export async function getAllNotes(req, res) {
 }
 
 export async function getOneNote(req, res) {
-    const { id } = req.params;
+    const { note_uid } = req.params;
     const note = await Notes.findOne({
         where: {
-            id
+            note_uid
         }
     });
     res.json({
@@ -20,12 +20,12 @@ export async function getOneNote(req, res) {
 }
 
 export async function createNotes(req, res) {
+    const id = uuidv4();
     const note = req.body.note;
     try {
         let newNote = await Notes.create({
-            id: "123e4567-e89b-12d3-a456-426655440002",
+            note_uid:id,  
             note: note,
-            created_at: new Date()
         });
         if (newNote) {
             return res.json({
@@ -46,10 +46,10 @@ export async function createNotes(req, res) {
 }
 
 export async function deleteNote(req, res) {
-    const { id } = req.params;
+    const { note_uid } = req.params;
     const deleteNote = await Notes.destroy({
         where: {
-            id
+            note_uid
         }
     });
     res.json({
@@ -59,22 +59,20 @@ export async function deleteNote(req, res) {
 }
 
 export async function updateNote(req, res) {
-    const { id } = req.params;
+    const { note_uid } = req.params;
     const { note } = req.body;
 
     let updateNotes = await Notes.findAll({
         attributes: ["note"],
         where: {
-            id
+            note_uid
         }
     })
     if (updateNotes.length > 0) {
         updateNotes.forEach(async notes => {
             await notes.update({
-                id: "123e4567-e89b-12d3-a456-426655440002",
+                note_uid,
                 note: note,
-                updated_at: new Date()
-
             })
         })
     } {
