@@ -1,11 +1,14 @@
 import User from '../models/Users'
-import { jwt } from 'jsonwebtoken';
-import { bcrypt } from 'bcrypt';
-import { config } from 'config';
+import jwt  from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import  config  from 'config';
+import uuidv4 from 'uuid/v4'
 
 export async function createUser(req, res) {
+    const id = uuidv4();
+    const { email, password } = req.body;
+
     try {
-        const { email, password } = req.body;
         const candidate = await User.findOne({
             where: {
                 email
@@ -17,15 +20,26 @@ export async function createUser(req, res) {
             })
         }
         const hashedPassword = await bcrypt.hash(password, 12);
-
-        const user = new User({
-            email,
+        let newUser = await User.create({
+            user_uid: id,
+            email: email,
             password: hashedPassword
+        });
+
+        if (newUser) {
+            return res.json({
+                message: "User created successfully",
+                data: newUser
+            })
+        }
+    }
+
+    catch (e) {
+        console.log(e);
+        res.status(500).json({
+            message: "Something goes wrong",
+            data: {}
         })
-        await user.save();
-        res.status(201).json({ message: 'User created' })
-    } catch (error) {
-        res.status(500).json({ message: 'Sorry,something went wrong' })
     }
 }
 
@@ -33,7 +47,9 @@ export async function login(req, res) {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({
-            where: { email }
+            where: { 
+                email 
+            }
         })
         if (!user) {
             return res.status(400).json({ message: 'User not found' })
@@ -47,8 +63,13 @@ export async function login(req, res) {
             config.get('jwtSecret'),
             { expiresIn: '1h' }
         )
-        res.json({ token, userId: user.id })
-    } catch (error) {
-        res.status(500).json({ message: 'Sorry,something went wrong' })
+        res.json({ token, userId: user.user_uid  })
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            message: "Something goes wrong",
+            data: {}
+        })
     }
 }
+
